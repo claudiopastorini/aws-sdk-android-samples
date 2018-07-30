@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -60,10 +60,10 @@ public class AmazonClientManager {
         CognitoCachingCredentialsProvider credentials = new CognitoCachingCredentialsProvider(
                 context,
                 Constants.IDENTITY_POOL_ID,
-                Regions.US_EAST_1);
+                Constants.COGNITO_REGION);
 
         ddb = new AmazonDynamoDBClient(credentials);
-        ddb.setRegion(Region.getRegion(Regions.US_WEST_2));
+        ddb.setRegion(Region.getRegion(Constants.DYNAMODB_REGION));
     }
 
     public boolean wipeCredentialsOnAuthError(AmazonServiceException ex) {

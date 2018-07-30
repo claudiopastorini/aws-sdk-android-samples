@@ -25,6 +25,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.amazonaws.cognito.android.samples.authdemo.fragments.AuthUserFragment;
 import com.amazonaws.cognito.android.samples.authdemo.fragments.UnauthUserFragment;
@@ -33,7 +35,7 @@ import com.amazonaws.mobileconnectors.cognitoauth.AuthUserSession;
 import com.amazonaws.mobileconnectors.cognitoauth.handlers.AuthHandler;
 
 public class MainActivity extends FragmentActivity
-implements AuthUserFragment.OnFragmentInteractionListener,
+        implements AuthUserFragment.OnFragmentInteractionListener,
         UnauthUserFragment.OnFragmentInteractionListener {
     private static final String TAG = "CognitoAuthDemo";
     private Auth auth;
@@ -67,10 +69,12 @@ implements AuthUserFragment.OnFragmentInteractionListener,
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayoutContainer, newUserFragment);
         transaction.commit();
+        setScreenImages();
     }
 
     /**
      * Sets auth user fragment.
+     *
      * @param session {@link AuthUserSession} containing tokens for a user.
      */
     private void setAuthUserFragment(AuthUserSession session) {
@@ -84,10 +88,12 @@ implements AuthUserFragment.OnFragmentInteractionListener,
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayoutContainer, userFragment);
         transaction.commit();
+        setScreenImages();
     }
 
     /**
      * Handles button press.
+     *
      * @param signIn When {@code True} this performs sign-in.
      */
     public void onButtonPress(boolean signIn) {
@@ -110,6 +116,7 @@ implements AuthUserFragment.OnFragmentInteractionListener,
     void initCognito() {
         //  -- Create an instance of Auth --
         Auth.Builder builder = new Auth.Builder().setAppClientId(getString(R.string.cognito_client_id))
+                .setAppClientSecret(getString(R.string.cognito_client_secret))
                 .setAppCognitoWebDomain(getString(R.string.cognito_web_domain))
                 .setApplicationContext(getApplicationContext())
                 .setAuthHandler(new callback())
@@ -138,12 +145,13 @@ implements AuthUserFragment.OnFragmentInteractionListener,
 
         @Override
         public void onFailure(Exception e) {
-
+            Log.e(TAG, "Failed to auth", e);
         }
     }
 
     /**
      * Show an popup dialog.
+     *
      * @param title
      * @param body
      */
@@ -157,7 +165,7 @@ implements AuthUserFragment.OnFragmentInteractionListener,
 
                 } catch (Exception e) {
                     // Log failure
-                    Log.e(TAG,"Dialog failure", e);
+                    Log.e(TAG, "Dialog failure", e);
                 }
             }
         });
@@ -165,4 +173,11 @@ implements AuthUserFragment.OnFragmentInteractionListener,
         userDialog.show();
     }
 
+    /**
+     * Sets images on the screen.
+     */
+    private void setScreenImages() {
+        ImageView cognitoLogo = (ImageView) findViewById(R.id.imageViewCognito);
+        cognitoLogo.setImageDrawable(getDrawable(R.drawable.ic_mobileservices_amazoncognito));
+    }
 }

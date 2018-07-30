@@ -51,5 +51,4 @@
 
     <include layout="@layout/content_mfa" />
 
-
 </android.support.design.widget.CoordinatorLayout>
